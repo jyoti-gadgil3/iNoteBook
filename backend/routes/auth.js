@@ -4,10 +4,12 @@ const { body, validationResult } = require("express-validator");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const fetchUser = require("../middleware/fetchUser");
+
 
 const JWT_SECRET = "Jyotiislearning@jwt";
 
-// Creating a user using : POST "/api/auth/createUser". No Login required
+// ROUTE 1:  Creating a user using : POST "/api/auth/createUser". No Login required
 router.post(
   "/createUser",
   [
@@ -57,7 +59,7 @@ router.post(
   }
 );
 
-// Authenticating a user using : POST "/api/auth/login". No Login required
+//  ROUTE 2: Authenticating a user using : POST "/api/auth/login". No Login required
 router.post(
   "/login",
   [
@@ -96,4 +98,16 @@ router.post(
   }
 );
 
+//  ROUTE 3: Get loggedin User Details using : POST "/api/auth/getuser".Login required
+router.post("/getuser",fetchUser, async (req, res) => {
+  try {
+    userId = req.user.id;
+    const user = await User.findById(userId);
+    res.send(user);
+    
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Interal Server Error");
+  }
+});
 module.exports = router;
