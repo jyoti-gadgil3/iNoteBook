@@ -1,0 +1,49 @@
+{
+    "info": {
+        "_postman_id": "7b0ffbf4-22fd-495b-96e8-b791ffb65bc4",
+        "name": "iNotebook",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": ""
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Create a new User",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:5000/api/auth/createUser",
+                            "path": [
+                                "api",
+                                "auth",
+                                "createUser"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000"
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"name\" :\"Hello Potter\",\n  \"email\":\"hello@example.dev\",\n  \"password\":\"buck123\"\n}"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
