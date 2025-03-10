@@ -1,6 +1,6 @@
 {
     "info": {
-        "_postman_id": "7b0ffbf4-22fd-495b-96e8-b791ffb65bc4",
+        "_postman_id": "65622ca9-d08c-4aa6-8c4f-bef864eae2aa",
         "name": "iNotebook",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "description": ""
@@ -39,11 +39,74 @@
                                     "language": "json"
                                 }
                             },
-                            "raw": "{\n  \"name\" :\"Hello Potter\",\n  \"email\":\"hello@example.dev\",\n  \"password\":\"buck123\"\n}"
+                            "raw": "{\n  \"name\" :\"Draco Malfoy\",\n  \"email\":\"malfoy@manner.dev\",\n  \"password\":\"slytherin\"\n}"
                         }
+                    }
+                },
+                {
+                    "name": "User login using credentials",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:5000/api/auth/login",
+                            "path": [
+                                "api",
+                                "auth",
+                                "login"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000"
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n  \"email\":\"malfoy@manner.dev\",\n  \"password\":\"slytherin\"\n}"
+                        }
+                    }
+                },
+                {
+                    "name": "Get User Data",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:5000/api/auth/getuser",
+                            "path": [
+                                "api",
+                                "auth",
+                                "getuser"
+                            ],
+                            "protocol": "http",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "5000"
+                        },
+                        "header": [
+                            {
+                                "key": "auth-token",
+                                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjdjZjI5ZWExZjE3OGUyYmQ4MWNiNzIyIn0sImlhdCI6MTc0MTYzMTg4N30.Hl7DrDOwG6HNfHiwH1A1UZKSlOVutuLwHPyF9CyxW_M"
+                            }
+                        ]
                     }
                 }
             ]
+        },
+        {
+            "name": "Notes",
+            "item": []
         }
     ]
 }
