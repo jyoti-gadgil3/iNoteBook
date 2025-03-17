@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 // Adding connection string from MongoDB database as mongoURI 
 const mongoURI = "mongodb://localhost:27017/inotebook?directConnection=true";
 
