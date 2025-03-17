@@ -16,14 +16,14 @@ router.get("/fetchallnotes", fetchUser, async (req, res) => {
   }
 });
 
-// ROUTE 1:  Add a new Note using : POST "/api/notes/addnote". Login required
+// ROUTE 2:  Add a new Note using : POST "/api/notes/addnote". Login required
 router.post(
   "/addnote",
   fetchUser,
   [
     // Adding validations for the fields using express-validator
     body("title", "Enter a valid title").isLength({ min: 3 }),
-    body("description", "Enter a valid description").isLength({ min: 5 }),
+    body("description", "Description must be atleast 5 characters").isLength({ min: 5 }),
   ],
   async (req, res) => {
     try {
@@ -51,5 +51,42 @@ router.post(
     }
   }
 );
+
+// ROUTE 3:  Update an existing Note using : PUT "/api/notes/updatenote". Login required
+router.put("/updatenote/:id", fetchUser, async (req, res) => {
+  try {
+    const { title, description, tag } = req.body;
+
+    // Create a newnote Object
+    const newNote = {};
+    if (title) {
+      newNote.title = title;
+    }
+    if (description) {
+      newNote.description = description;
+    }
+    if (tag) {
+      newNote.tag = tag;
+    }
+
+    // Find the note to be updated and update it
+    let note = await Note.findById(req.params.id);
+    if (!note) {
+      res.status(404).send("Not Found");
+    }
+
+    if (note.user.toString() !== req.user.id) {
+      return res.status(401).send("Not Allowed");
+    }
+
+    note = await Note.findByIdAndUpdate(req.params.id, { $set: newNote }, { new: true });
+
+    res.json({ note });
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Interal Server Error");
+  }
+});
 
 module.exports = router;
