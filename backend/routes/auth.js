@@ -8,6 +8,7 @@ const fetchUser = require("../middleware/fetchUser");
 
 
 const JWT_SECRET = "Jyotiislearning@jwt";
+let success = false
 
 // ROUTE 1:  Creating a user using : POST "/api/auth/createUser". No Login required
 router.post(
@@ -19,16 +20,18 @@ router.post(
     body("password", "Password must be atleast 5 characters").isLength({ min: 5 }),
   ],
   async (req, res) => {
+    let success = false
     // If there are errors return Bad Request and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     }
     try {
       // Check whether the user with this email exists already
       let user = await User.findOne({ email: req.body.email });
       if (user) {
-        return res.status(400).json({ error: "Sorry a user with this email already exists" });
+        success = false
+        return res.status(400).json({success, error: "Sorry a user with this email already exists" });
       }
 
       //   Hashing the password using bcryptjs
@@ -51,10 +54,12 @@ router.post(
       console.log(authtoken);
 
       //   res.json(user);
-      res.json({ authtoken: authtoken });
+      success = true
+      res.json({success, authtoken: authtoken });
     } catch (error) {
+      success = false
       console.error(error.message);
-      res.status(500).send("Interal Server Error");
+      res.status(500).send({success, error:"Interal Server Error"});
     }
   }
 );
@@ -71,18 +76,21 @@ router.post(
     // If there are errors return Bad Request and the errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      success= false
+      return res.status(400).json({success , errors: errors.array() });
     }
 
     const { email, password } = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json("Please try to login with correct credentials");
+        success = false
+        return res.status(400).json({success, error:"Please try to login with correct credentials"});
       }
       const passwordCompare = await bcrypt.compare(password, user.password);
       if (!passwordCompare) {
-        return res.status(400).json("Please try to login with correct credentials");
+        success = false
+        return res.status(400).json({success, error : "Please try to login with correct credentials"});
       }
       const data = {
         user: {
@@ -90,7 +98,8 @@ router.post(
         },
       };
       const authtoken = jwt.sign(data, JWT_SECRET);
-      res.json({ authtoken: authtoken });
+      success = true
+      res.json({ success, authtoken });
     } catch (error) {
       console.error(error.message);
       res.status(500).send("Interal Server Error");

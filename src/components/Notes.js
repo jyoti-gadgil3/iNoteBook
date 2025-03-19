@@ -4,7 +4,7 @@ import noteContext from "../context/notes/noteContext";
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 
-const Notes = () => {
+const Notes = (props) => {
   const context = useContext(noteContext);
   const { notes, getNotes, editNote } = context;
   
@@ -28,6 +28,7 @@ const Notes = () => {
     // console.log("Updating the note...", note);
     editNote(note.id, note.etitle, note.edescription, note.tag)
     refClose.current.click();
+    props.showAlert("Updated Successfully!","success")
   };
   
 
@@ -37,7 +38,7 @@ const Notes = () => {
 
   return (
     <>
-      <AddNote />
+      <AddNote showAlert={props.showAlert}/>
 
       <button
         ref={ref}
@@ -118,7 +119,7 @@ const Notes = () => {
         {notes.length === 0 && "No notes to be displayed"}
         </div>
         {notes.map((note) => {
-          return <NoteItem key={note._id} updateNote={updateNote} note={note} />;
+          return <NoteItem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />;
         })}
         
       </div>
