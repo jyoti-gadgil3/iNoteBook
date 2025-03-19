@@ -6,24 +6,30 @@ import AddNote from "./AddNote";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getNotes } = context;
+  const { notes, getNotes, editNote } = context;
+  
+  const [note, setNote] = useState({ id:"", etitle: "", edescription: "", etag: "" });
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line
   }, []);
 
+  const ref = useRef(null);
+  const refClose = useRef(null);
+
   const updateNote = (currentNote) => {
     ref.current.click();
-    setNote({ etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
+    setNote({id:currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
   };
-  const ref = useRef(null);
+  
 
-  const [note, setNote] = useState({ etitle: "", edescription: "", etag: "" });
 
   const handleClick = (e) => {
-    e.preventDefault();
-    console.log("Updating the note...", note);
+    // console.log("Updating the note...", note);
+    editNote(note.id, note.etitle, note.edescription, note.tag)
+    refClose.current.click();
   };
+  
 
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -42,13 +48,7 @@ const Notes = () => {
         Launch demo modal
       </button>
 
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -66,6 +66,7 @@ const Notes = () => {
                     className="form-control"
                     id="etitle"
                     name="etitle"
+                    minLength={5} required
                     value={note.etitle}
                     aria-describedby="emailHelp"
                     placeholder="Enter title"
@@ -79,6 +80,7 @@ const Notes = () => {
                     className="form-control"
                     id="edescription"
                     name="edescription"
+                    minLength={5} required
                     value={note.edescription}
                     placeholder="Enter Description"
                     onChange={onChange}
@@ -99,10 +101,10 @@ const Notes = () => {
               </form>
             </div>
             <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">
+              <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
-              <button type="button" className="btn btn-primary" onClick={handleClick}>
+              <button disabled={note.etitle.length<5 || note.edescription.length<5} type="button" className="btn btn-primary" onClick={handleClick}>
                 Update Note
               </button>
             </div>
@@ -112,9 +114,13 @@ const Notes = () => {
 
       <div className="row my-3">
         <h2>Your Notes</h2>
+        <div className="conatiner">
+        {notes.length === 0 && "No notes to be displayed"}
+        </div>
         {notes.map((note) => {
           return <NoteItem key={note._id} updateNote={updateNote} note={note} />;
         })}
+        
       </div>
     </>
   );
