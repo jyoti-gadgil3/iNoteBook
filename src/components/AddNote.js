@@ -31,7 +31,7 @@ const AddNote = () => {
             onChange={onChange}
           />
         </div>
-        <div className="form-group">
+        <div className="form-group my-3 mb-3">
           <label htmlFor="description">Description</label>
           <input
             type="text"
@@ -42,11 +42,9 @@ const AddNote = () => {
             onChange={onChange}
           />
         </div>
-        <div className="form-check">
-          <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-          <label className="form-check-label" htmlFor="exampleCheck1">
-            Check me out
-          </label>
+        <div className="form-group my-3 mb-3">
+          <label htmlFor="tag">Tag</label>
+          <input type="text" className="form-control" id="tag" name="tag" placeholder="Enter Tag" onChange={onChange} />
         </div>
         <button type="submit" className="btn btn-primary" onClick={handleClick}>
           Add Note
