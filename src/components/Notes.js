@@ -1,16 +1,24 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import noteContext from "../context/notes/noteContext";
+import { useNavigate } from "react-router-dom";
 
 import NoteItem from "./NoteItem";
 import AddNote from "./AddNote";
 
+
 const Notes = (props) => {
+  const navigate = useNavigate();
   const context = useContext(noteContext);
   const { notes, getNotes, editNote } = context;
-  
-  const [note, setNote] = useState({ id:"", etitle: "", edescription: "", etag: "" });
+
+  const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" });
   useEffect(() => {
-    getNotes();
+    if (localStorage.getItem("token")) {
+      console.log(localStorage.getItem("token"))
+      getNotes();
+    }else{
+      navigate('/login')
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -19,18 +27,20 @@ const Notes = (props) => {
 
   const updateNote = (currentNote) => {
     ref.current.click();
-    setNote({id:currentNote._id, etitle: currentNote.title, edescription: currentNote.description, etag: currentNote.tag });
+    setNote({
+      id: currentNote._id,
+      etitle: currentNote.title,
+      edescription: currentNote.description,
+      etag: currentNote.tag,
+    });
   };
-  
-
 
   const handleClick = (e) => {
     // console.log("Updating the note...", note);
-    editNote(note.id, note.etitle, note.edescription, note.tag)
+    editNote(note.id, note.etitle, note.edescription, note.tag);
     refClose.current.click();
-    props.showAlert("Updated Successfully!","success")
+    props.showAlert("Updated Successfully!", "success");
   };
-  
 
   const onChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
@@ -38,7 +48,7 @@ const Notes = (props) => {
 
   return (
     <>
-      <AddNote showAlert={props.showAlert}/>
+      <AddNote showAlert={props.showAlert} />
 
       <button
         ref={ref}
@@ -49,7 +59,12 @@ const Notes = (props) => {
         Launch demo modal
       </button>
 
-      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -67,7 +82,8 @@ const Notes = (props) => {
                     className="form-control"
                     id="etitle"
                     name="etitle"
-                    minLength={5} required
+                    minLength={5}
+                    required
                     value={note.etitle}
                     aria-describedby="emailHelp"
                     placeholder="Enter title"
@@ -81,7 +97,8 @@ const Notes = (props) => {
                     className="form-control"
                     id="edescription"
                     name="edescription"
-                    minLength={5} required
+                    minLength={5}
+                    required
                     value={note.edescription}
                     placeholder="Enter Description"
                     onChange={onChange}
@@ -105,7 +122,11 @@ const Notes = (props) => {
               <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
-              <button disabled={note.etitle.length<5 || note.edescription.length<5} type="button" className="btn btn-primary" onClick={handleClick}>
+              <button
+                disabled={note.etitle.length < 5 || note.edescription.length < 5}
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClick}>
                 Update Note
               </button>
             </div>
@@ -115,13 +136,10 @@ const Notes = (props) => {
 
       <div className="row my-3">
         <h2>Your Notes</h2>
-        <div className="conatiner">
-        {notes.length === 0 && "No notes to be displayed"}
-        </div>
+        <div className="conatiner">{notes.length === 0 && "No notes to be displayed"}</div>
         {notes.map((note) => {
           return <NoteItem key={note._id} updateNote={updateNote} showAlert={props.showAlert} note={note} />;
         })}
-        
       </div>
     </>
   );
