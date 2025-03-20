@@ -1,11 +1,18 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = (props) => {
+  const ref = useRef(null);
+  const refClose = useRef(null);
+  
   const [credentials, setCredentials] = useState({ name: "", email: "", password: "", cpassword: "" });
 
   const host = "http://localhost:5000";
   const navigate = useNavigate();
+
+  const handleCopy = () => {
+        navigator.clipboard.writeText("hello"); 
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,10 +29,14 @@ const Signup = (props) => {
     if (json.success) {
       // Save the auth token and redirect
       localStorage.setItem("token", json.authtoken);
-      navigate("/");
-      props.showAlert("Account Created Successfully!", "success")
+      ref.current.click();
+      if (ref.current) {
+        refClose.current.click();
+        // navigate("/");
+      }
+      props.showAlert("Account Created Successfully!", "success");
     } else {
-      props.showAlert("Invalid Details", "danger")
+      props.showAlert("Invalid Details", "danger");
     }
   };
 
@@ -69,17 +80,69 @@ const Signup = (props) => {
           <label htmlFor="password" className="form-label">
             Password
           </label>
-          <input type="password" className="form-control" id="password" onChange={onChange} name="password" minLength={5} required/>
+          <input
+            type="password"
+            className="form-control"
+            id="password"
+            onChange={onChange}
+            name="password"
+            minLength={5}
+            required
+          />
         </div>
         <div className="mb-3">
           <label htmlFor="cpassword" className="form-label">
             Confirm Password
           </label>
-          <input type="password" className="form-control" id="cpassword" onChange={onChange} name="cpassword" minLength={5} required/>
+          <input
+            type="password"
+            className="form-control"
+            id="cpassword"
+            onChange={onChange}
+            name="cpassword"
+            minLength={5}
+            required
+          />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button ref={ref} type="submit" className="btn btn-primary">
           Submit
         </button>
+
+        <button
+          ref={ref}
+          type="button"
+          className="btn btn-primary d-none"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal">
+          Launch demo modal
+        </button>
+
+        <div
+          className="modal fade"
+          id="exampleModal"
+          tabIndex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">
+                  Your Authentication token
+                </h5>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div className="modal-body">Copy Your Authentication token</div>
+              <div className="modal-body" style={{wordWrap: "break-word"}}>{localStorage.getItem("token")}</div>
+              <div className="modal-footer">
+                <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  Close
+                </button>
+                <button type="button" className="btn btn-primary" onClick={handleCopy}>Copy the token</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   );

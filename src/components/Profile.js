@@ -5,7 +5,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const host = "http://localhost:5000";
-  let user = { id: "", name: "", email: "" };
 
   const handleClick = () => {
     navigate("/");
@@ -19,11 +18,12 @@ const Profile = () => {
       },
     });
     const json = await response.json();
+    console.log(json.date)
     localStorage.setItem("name", json.name);
     localStorage.setItem("id", json._id);
     localStorage.setItem("email", json.email);
+    localStorage.setItem('cDate', json.date);
   };
-  console.log(user);
 
   if (token) {
     handleProfile();
@@ -39,7 +39,7 @@ const Profile = () => {
           <li className="list-group-item">Name : {localStorage.getItem("name")}</li>
           <li className="list-group-item">Email : {localStorage.getItem("email")}</li>
           <li className="list-group-item">ID : {localStorage.getItem("id")}</li>
-          <li className="list-group-item">Your Authentication Token : {localStorage.getItem("token")}</li>
+          <li className="list-group-item">Profile Created : {localStorage.getItem("cDate")}</li>
         </ul>
       </div>
       <div className="my-2">

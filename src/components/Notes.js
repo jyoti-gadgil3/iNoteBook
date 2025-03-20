@@ -14,7 +14,7 @@ const Notes = (props) => {
   const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" });
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      console.log(localStorage.getItem("token"))
+      // console.log(localStorage.getItem("token"))
       getNotes();
     }else{
       navigate('/login')
